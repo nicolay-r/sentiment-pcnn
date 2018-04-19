@@ -6,17 +6,22 @@ from core.source.entity import EntityCollection
 from core.source.news import News
 from core.source.opinion import OpinionCollection
 from core.source.synonyms import SynonymsCollection
-from core.runtime.embeddings import Embedding, RusvectoresEmbedding
+from core.runtime.embeddings import Embedding
 
-from networks import pcnn_core
+from networks.model import Model
+from networks.pcnn import pcnn_core
 from networks.callback import Callback
-from networks.pcnn_input import EntityIndices, ExtractedRelationCollection, NewsDescriptor, NewsWords, BagsCollection, \
-    NewsWordsCollection
+
+from networks.core.relations import ExtractedRelationCollection
+from networks.core.indices import EntityIndices
+from networks.core.utils import NewsDescriptor, NewsWords
+from networks.core.batch import BagsCollection
+from networks.core.words import NewsWordsCollection
 
 import io_utils
 
 
-class PCNN:
+class PCNN(Model):
 
     def __init__(
             self,
