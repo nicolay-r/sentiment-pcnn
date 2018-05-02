@@ -1,7 +1,12 @@
 # sentiment-pcnn
 
-PCNN -- is a Piecewise Convolutional Neural Network, written in Tensorflow.
+PCNN stands for Piecewise Convolutional Neural Network, written in
+Tensorflow.
 Considered as an application for sentiment attitudes extraction task.
+
+[Slides](docs/slides.pdf)
+
+![alt text][docs/pcnn.png]
 
 Dataset
 -------
@@ -52,3 +57,12 @@ Or a version which implements a cross validation:
 ```
 ./predict_pcnn_cv.py
 ```
+
+References
+----------
+
+Daojian Zeng, Kang Liu, Yubo Chen, and Jun Zhao, Distant
+supervision for relation extraction via piecewise convolutional
+neural networks, Proceedings of the 2015 Conference on
+Empirical Methods in Natural Language Processing, 2015,
+pp. 1753–1762
