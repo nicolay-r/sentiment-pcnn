@@ -1,7 +1,9 @@
-# sentiment-pcnn
+# Sentiment Piecewise Convolutional Neural Network
+![](https://img.shields.io/badge/Python-2.7-brightgreen.svg) 
+![](https://img.shields.io/badge/TensorFlow-1.4.1-yellowgreen.svg)
 
-This project represents an implementation of PCNN 
-(Piecewise Convolutional Neural Network), written in Tensorflow.
+This project represents an implementation of PCNN [[zeng2015distant](http://www.aclweb.org/anthology/D15-1203)], dubbed as
+*Piecewise Convolutional Neural Network*, written in Tensorflow.
 Considered as an application for sentiment attitudes extraction task.
 
 For more details, see:
@@ -17,6 +19,9 @@ Dataset
 We use [RuSentRel 1.0](https://github.com/nicolay-r/RuSentRel/tree/v1.0/)
 corpus consisted of analytical articles from Internet-portal
 inosmi.ru.
+
+Results
+-------
 Table below illustrates CNN/PCNN results in comparison with **baselines**
 (neg, pos, distr), and **classifiers** (KNN, SVM, Random Forest) 
 based on handcrafted NLP features.
@@ -81,8 +86,9 @@ Or a version which implements a cross validation:
 References
 ----------
 
-Daojian Zeng, Kang Liu, Yubo Chen, and Jun Zhao, Distant
+* Daojian Zeng, Kang Liu, Yubo Chen, and Jun Zhao, Distant
 supervision for relation extraction via piecewise convolutional
 neural networks, Proceedings of the 2015 Conference on
 Empirical Methods in Natural Language Processing, 2015,
 pp. 1753–1762
+[[paper](http://www.aclweb.org/anthology/D15-1203)]
