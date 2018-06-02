@@ -35,9 +35,14 @@ Last row represent an asessment of agreement between two annotators.
 |KNN                  |  0.18     | 0.06   | 0.09     |
 |SVM (GRID)           |  0.09     | 0.36   | 0.15     |
 |Random forest (GRID) |  0.41     | 0.21   | 0.27     |
-| **CNN**  		        |  0.41     | 0.23   | **0.31** |
-| **PCNN** 		        |  0.42     | 0.23   | **0.31** |
+| **CNN**  		      |  0.41     | 0.23   | **0.31** |
+| **PCNN** 		      |  0.42     | 0.23   | **0.31** |
 |Expert agreement     |  0.62     | 0.49   | 0.55     |
+
+Comparison of CNN and PCNN during training process illustrated in figures below:
+
+![alt text](docs/f1.png)
+![alt text](docs/cost.png)
 
 Installation
 ------------
@@ -51,7 +56,7 @@ source my_env/bin/activate
 
 Use `Makefile` to install
 [core](https://github.com/nicolay-r/sentiment-erc-core) library and download
-[dataset](https://github.com/nicolay-r/RuSentRel):
+[dataset](https://github.com/nicolay-r/RuSentRel/tree/v1.0/):
 ```
 make install
 ```
@@ -77,7 +82,6 @@ At first, we compose a list of neutral relations per each article by running:
 And we are ready to apply model with different settings by simply rinning:
 ```
 ./predict_cnn.py
-```
 ```
 
 References
