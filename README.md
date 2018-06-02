@@ -1,5 +1,5 @@
 # Sentiment Piecewise Convolutional Neural Network
-![](https://img.shields.io/badge/Python-2.7-brightgreen.svg) 
+![](https://img.shields.io/badge/Python-2.7-brightgreen.svg)
 ![](https://img.shields.io/badge/TensorFlow-1.4.1-yellowgreen.svg)
 
 This project represents an implementation of PCNN [[zeng2015distant](http://www.aclweb.org/anthology/D15-1203)], dubbed as
@@ -23,7 +23,7 @@ inosmi.ru.
 Results
 -------
 Table below illustrates CNN/PCNN results in comparison with **baselines**
-(neg, pos, distr), and **classifiers** (KNN, SVM, Random Forest) 
+(neg, pos, distr), and **classifiers** (KNN, SVM, Random Forest)
 based on handcrafted NLP features.
 Last row represent an asessment of agreement between two annotators.
 
@@ -76,11 +76,8 @@ At first, we compose a list of neutral relations per each article by running:
 ```
 And we are ready to apply model with different settings by simply rinning:
 ```
-./predict_pcnn.py
+./predict_cnn.py
 ```
-Or a version which implements a cross validation:
-```
-./predict_pcnn_cv.py
 ```
 
 References

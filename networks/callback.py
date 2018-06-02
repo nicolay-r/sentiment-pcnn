@@ -1,6 +1,6 @@
 class Callback(object):
 
-    def on_initialized(self): pass
+    def on_initialized(self, network): pass
 
     def on_epoch_finished(self, avg_cost): pass
 

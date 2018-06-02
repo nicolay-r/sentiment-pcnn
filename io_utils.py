@@ -2,6 +2,7 @@
 import io
 
 from os import path, makedirs, mkdir
+from networks.io import NetworkIO
 from gensim.models.word2vec import Word2Vec
 from core.evaluation.statistic import FilesToCompare
 
@@ -102,9 +103,9 @@ def get_news_filepath(index, root=get_collection_root()):
     return path.join(root, "art{}.txt".format(index))
 
 
-def get_opin_filepath(index, is_etalon, root=get_collection_root()):
+def get_opin_filepath(index, is_etalon, prefix='art', root=get_collection_root()):
     assert(type(is_etalon) == bool)
-    return path.join(root, "art{}.opin{}.txt".format(index, '' if is_etalon else '.result'))
+    return path.join(root, "{}{}.opin{}.txt".format(prefix, index, '' if is_etalon else '.result'))
 
 def get_constraint_opin_filepath(index, root=get_collection_root()):
     return path.join(root, "art{}.opin.graph.txt".format(index))
@@ -248,6 +249,7 @@ def create_files_to_compare_list(method_name, indices=test_indices(), root=get_c
     Create list of comparable opinion files for the certain method.
     method_name: str
     """
+    # TODO. Refactor method_name with method_root
     method_root_filepath = get_method_root(method_name)
     return [FilesToCompare(
                 get_opin_filepath(i, is_etalon=False, root=method_root_filepath),
@@ -281,3 +283,38 @@ def indices_to_cv_pairs(cv, indices_list=collection_indices()):
         test = chunk
 
         yield train, test
+
+
+class NetworkIOProvider(NetworkIO):
+
+    @staticmethod
+    def get_entity_filepath(article_index):
+        return get_entity_filepath(article_index)
+
+    @staticmethod
+    def get_news_filepath(article_index):
+        return get_news_filepath(article_index)
+
+    @staticmethod
+    def get_opinion_input_filepath(article_index):
+        return get_opin_filepath(article_index, is_etalon=True)
+
+    @staticmethod
+    def get_opinion_output_filepath(article_index, model_root):
+        return get_opin_filepath(article_index, is_etalon=False, root=model_root)
+
+    @staticmethod
+    def get_neutral_filepath(article_index, is_train_collection):
+        return get_neutral_filepath(article_index, is_train=is_train_collection)
+
+    @staticmethod
+    def get_model_root(method_name):
+        return get_method_root(method_name)
+
+    @staticmethod
+    def get_files_to_compare_list(method_name, indices, is_train_collection):
+        # TODO. Method name (is not root actually). Better to refactor it.
+        return create_files_to_compare_list(
+            method_name,
+            indices=indices,
+            is_train_collection=is_train_collection)

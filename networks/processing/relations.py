@@ -2,11 +2,12 @@
 
 from core.evaluation.labels import Label, PositiveLabel, NegativeLabel, NeutralLabel
 from core.source.news import News
-from core.source.opinion import OpinionCollection, Opinion
+from core.source.opinion import OpinionCollection
+from core.source.vectors import OpinionVectorCollection
 from core.source.synonyms import SynonymsCollection
 from core.runtime.relations import RelationCollection, Relation
 from batch import MiniBatch
-from utils import TextPosition, NewsDescriptor
+from utils import TextPosition, NewsDescriptor, ExtractedRelation
 
 
 # TODO list:
@@ -21,11 +22,10 @@ from utils import TextPosition, NewsDescriptor
 # 5. Feed network
 
 
-class ExtractedRelationCollection:
+class ExtractedRelationsCollection:
 
     def __init__(self):
-        self.relations = []         # list of tuples (positions, score)
-        self.relation_values = []   # entity values  (left, right)
+        self.relations = []         # list ExtractedRelations
 
     # TODO. Duplicated from vectors.py
     @staticmethod
@@ -43,8 +43,8 @@ class ExtractedRelationCollection:
     def _in_window(relation, news_words, max_relation_words_width):
         assert(isinstance(relation, Relation))
         assert(type(max_relation_words_width) == int and max_relation_words_width >= 0)
-        pos1 = ExtractedRelationCollection._get_entity_position(relation.entity_left_ID, news_words)
-        pos2 = ExtractedRelationCollection._get_entity_position(relation.entity_right_ID, news_words)
+        pos1 = ExtractedRelationsCollection._get_entity_position(relation.entity_left_ID, news_words)
+        pos2 = ExtractedRelationsCollection._get_entity_position(relation.entity_right_ID, news_words)
 
         # we guarantee that window has a gap at both outer sides, [ ... e1 ... e2 ... ]
         #                                                            ^             ^
@@ -62,7 +62,7 @@ class ExtractedRelationCollection:
 
     @staticmethod
     def _get_entity_position(entity_ID, news_words):
-        assert(type(entity_ID) == unicode)
+        assert(isinstance(entity_ID, unicode))
         return news_words.get_entity_position(entity_ID)
 
     def add_news_relations(self,
@@ -72,8 +72,8 @@ class ExtractedRelationCollection:
                            is_train_collection):
         assert(isinstance(news_descriptor, NewsDescriptor))
         assert(isinstance(synonyms_collection, SynonymsCollection))
-        assert(type(max_relation_words_width) == int and max_relation_words_width >= 0)
-        # Code the same as in vectors.py
+        assert(isinstance(max_relation_words_width, int) and max_relation_words_width >= 0)
+
         for opinions in news_descriptor.opinion_collections:
             assert(isinstance(opinions, OpinionCollection))
             for o in opinions:
@@ -94,29 +94,49 @@ class ExtractedRelationCollection:
 
                 for r in relations:
 
-                    pos1 = ExtractedRelationCollection._get_entity_position(
+                    pos1 = ExtractedRelationsCollection._get_entity_position(
                         r.entity_left_ID, news_descriptor.news_words)
-                    pos2 = ExtractedRelationCollection._get_entity_position(
+                    pos2 = ExtractedRelationsCollection._get_entity_position(
                         r.entity_right_ID, news_descriptor.news_words)
 
-                    self.relations.append(
-                        (TextPosition(news_descriptor.news_index, pos1, pos2),
-                         o.sentiment))
+                    # Add not opinion, but features
+                    feature_vector = self._find_feature_vector(
+                        news_descriptor.opinion_vector_collections, o)
 
-                    self.relation_values.append(
-                        (r.get_left_entity_value(), r.get_right_entity_value()))
+                    relation = ExtractedRelation(
+                        feature_vector,
+                        TextPosition(news_descriptor.news_index, pos1, pos2),
+                        r.get_left_entity_value(),
+                        r.get_right_entity_value(),
+                        o.sentiment)
+
+                    self.relations.append(relation)
+
+    @staticmethod
+    def _find_feature_vector(opinion_vector_collections, opinion):
+        assert(isinstance(opinion_vector_collections, list))
+
+        vector = None
+        for c in opinion_vector_collections:
+            assert(isinstance(c, OpinionVectorCollection))
+            if not c.has_opinion(opinion):
+                continue
+            return c.find_by_opinion(opinion)
+
+        return None
 
     def _find_relation_and_set_label(self, position, label):
         # O(N*2)
         assert(isinstance(position, TextPosition))
         assert(isinstance(label, Label))
-        for index, r in enumerate(self.relations):
-            p, _ = r
-            assert(isinstance(p, TextPosition))
-            if p.equals(position):
-                self.relations[index] = (p, label)
+
+        for r in self.relations:
+            assert(isinstance(r, ExtractedRelation))
+            if r.text_position.equals(position):
+                r.label = label
                 return
-        raise Exception("Position was not found, ({}, {})".format(position.left, position.right))
+
+        raise Exception("Position was not found, ({}, {})".format(position.left_entity_index, position.right_entity_index))
 
     def apply_labels(self, uint_labels, minibatch):
         """
@@ -130,9 +150,9 @@ class ExtractedRelationCollection:
         assert(isinstance(minibatch, MiniBatch))
         index = 0
         for bag in minibatch.bags:
-            for position in bag.positions:
+            for sample in bag.samples:
                 label = Label.from_uint(uint_labels[index])
-                self._find_relation_and_set_label(position, label)
+                self._find_relation_and_set_label(sample.position, label)
                 index += 1
 
     def to_opinion_collections(self, news_indices, synonyms):
@@ -144,18 +164,16 @@ class ExtractedRelationCollection:
         for news_ID in news_indices:
             result_opinions = OpinionCollection(None, synonyms)
 
-            for relation_index, r in enumerate(self.relations):
+            for r in self.relations:
+                assert(isinstance(r, ExtractedRelation))
 
-                p, label = r
-
-                if p.news_ID != news_ID:
+                if r.text_position.news_ID != news_ID:
                     continue
 
-                if label == NeutralLabel():  # ignore neutral labels
+                if r.label == NeutralLabel():  # ignore neutral labels
                     continue
 
-                left_entity_value, right_entity_value = self.relation_values[relation_index]
-                o = Opinion(left_entity_value, right_entity_value, label)
+                o = r.create_opinion()
                 if not result_opinions.has_opinion_by_synonyms(o):
                     result_opinions.add_opinion(o)
 
@@ -165,8 +183,8 @@ class ExtractedRelationCollection:
 
     def debug_statistic(self):
         labels_count = [0, 0, 0]
-        for _, label in self.relations:
-            labels_count[label.to_uint()] += 1
+        for r in self.relations:
+            labels_count[r.label.to_uint()] += 1
         return {'pos': labels_count[PositiveLabel().to_uint()],
                 'neg': labels_count[NegativeLabel().to_uint()],
                 'neu': labels_count[NeutralLabel().to_uint()]}

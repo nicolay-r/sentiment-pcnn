@@ -217,5 +217,3 @@ class NewsWords:
     def __iter__(self):
         for w in self.words_and_entities_list:
             yield w
-
-
