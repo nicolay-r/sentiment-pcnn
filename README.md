@@ -6,6 +6,10 @@ This project represents an implementation of PCNN [[zeng2015distant](http://www.
 *Piecewise Convolutional Neural Network*, written in Tensorflow.
 Considered as an application for sentiment attitudes extraction task.
 
+Architectures implementation:
+* [[cnn](networks/architectures/cnn.py)]
+* [[pcnn](networks/architectures/pcnn.py)]
+
 For more details, see:
 
 1. [CLLS-2018, Presentation slides](docs/slides.pdf)
@@ -22,6 +26,7 @@ inosmi.ru.
 
 Results
 -------
+Model [[configuration](networks/configurations/cnn.py)].
 Table below illustrates CNN/PCNN results in comparison with **baselines**
 (neg, pos, distr), and **classifiers** (KNN, SVM, Random Forest)
 based on handcrafted NLP features.
