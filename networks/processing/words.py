@@ -67,25 +67,30 @@ class NewsWordsCollection:
                 result = min(len(news_words), result)
         return result
 
-    def get_indices(self, news_ID, total_words_count, pad_size):
+    def get_embedding_indices(self, news_ID, total_words_count, pad_size):
         assert(type(news_ID) == int)
         assert(type(pad_size) == int)
-        return self.by_id[news_ID].to_indices(
+        return self.by_id[news_ID].to_embedding_indices(
             self.embedding,
             self.entity_indices,
             total_words_count,
             pad_size)
 
-    def get_indices_in_window(self, news_ID, total_words_count, w_from, w_to):
+    def get_embedding_indices_in_window(self, news_ID, total_words_count, w_from, w_to):
         assert(type(news_ID) == int)
         assert(type(w_from) == int)
         assert(type(w_to) == int)
-        return self.by_id[news_ID].to_indices(
+        return self.by_id[news_ID].to_embedding_indices(
             self.embedding,
             self.entity_indices,
             total_words_count,
             w_to - w_from,
             w_from, w_to)
+
+    def get_pos_indices_in_window(self, news_ID, w_from, w_to):
+        assert(type(w_from) == int)
+        assert(type(w_to) == int)
+        return self.by_id[news_ID].to_pos_indices(w_from, w_to)
 
 
 class NewsWords:
@@ -151,8 +156,38 @@ class NewsWords:
 
         return splitted
 
-    def to_indices(self, embedding, entity_indices, total_words_count, pad_size,
-                   w_from=None, w_to=None):
+    def to_pos_indices(self, w_from=None, w_to=None):
+        """
+        w_from: None or int
+            position of initial word, is a beginning of a window in news
+        w_from: None or int
+            position of last word (not included), is an end of window in news
+
+        returns: list int
+            list of indices
+        """
+        assert(w_from is None or isinstance(w_from, int))
+        assert(w_to is None or isinstance(w_to, int))
+
+        indices = []
+        if w_from is None and w_to is None:
+            taken_words = self.words
+        else:
+            taken_words = self.words[w_from:w_to]
+
+        unknown_index = len(stemmer.pos_names)
+
+        for w in taken_words:
+            if not isinstance(w, unicode):
+                index = unknown_index
+            else:
+                index = stemmer.pos_to_int(stemmer.get_term_pos(w))
+            indices.append(index)
+
+        return indices
+
+    def to_embedding_indices(self, embedding, entity_indices, total_words_count, pad_size,
+                             w_from=None, w_to=None):
         """
         w_from: None or int
             position of initial word, is a beginning of a window in news
@@ -173,13 +208,13 @@ class NewsWords:
         indices = []
         unknown_word_index = total_words_count - 1
 
-        if (w_from is None and w_to is None):
+        if w_from is None and w_to is None:
             taken_words = self.words
         else:
             taken_words = self.words[w_from:w_to]
 
         for w in taken_words:
-            if type(w) == unicode:
+            if isinstance(w, unicode):
                 terms = stemmer.lemmatize_to_list(w)
                 if len(terms) == 0:
                     index = unknown_word_index

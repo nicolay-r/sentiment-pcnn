@@ -1,6 +1,5 @@
 from networks.processing.words import NewsWordsCollection
 from networks.processing.utils import TextPosition
-from core.source.opinion import Opinion
 
 
 class Sample(object):
@@ -32,7 +31,7 @@ class Sample(object):
 
         assert((l > 0) and (r + w_from < w_to))
 
-        x_indices = news_collection.get_indices_in_window(
+        x_indices = news_collection.get_embedding_indices_in_window(
             self.position.news_ID,
             total_words_count,
             w_from,

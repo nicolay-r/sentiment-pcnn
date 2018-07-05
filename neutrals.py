@@ -33,7 +33,7 @@ def opinions_between_entities(E, diff, news, synonyms, sentiment_opins=None):
         neutral_opins.add_opinion(o)
 
     def is_ignored(entity):
-        # TODO. Move ignored entities into core.
+        # TODO. Move ignored entities into processing.
         return env.stemmer.lemmatize_to_str(entity.value) in IGNORED_ENTITIES
 
     def get_entity_synonyms(entity):

@@ -92,12 +92,7 @@ class TensorflowModel(object, NetworkIO):
 
     def set_optimiser(self, optimiser):
         assert(isinstance(self.network, NeuralNetwork))
-        assert(isinstance(optimiser, tf.train.AdadeltaOptimizer))    # TODO. Choose base class for optimiser
         self.optimiser = optimiser.minimize(self.network.Cost)
-
-    def set_compiled_network(self, network):
-        assert(isinstance(network, NeuralNetwork))
-        self.network = network
 
     def get_embedding_shape(self):
         return self.E.shape
@@ -124,11 +119,11 @@ class TensorflowModel(object, NetworkIO):
         sess.run(init_op)
         self.sess = sess
 
-    def fit(self, epochs, callback=None, debug=False):
-        assert(isinstance(epochs, int))
+    def fit(self, epochs_count, callback=None, debug=False):
+        assert(isinstance(epochs_count, int))
         assert(self.sess is not None)
 
-        for e in range(epochs):
+        for e in range(epochs_count):
             total_cost = 0
             np.random.shuffle(self.train_minibatches)
             for it, mbatch in enumerate(self.train_minibatches):
@@ -141,7 +136,9 @@ class TensorflowModel(object, NetworkIO):
                     self.sess,
                     mbatch,
                     self.train_news_words_collection,
-                    self.E.shape[0])
+                    self.E.shape[0],
+                    is_train=True,
+                    debug=debug)
 
                 _, cost = self.sess.run([self.optimiser, self.network.Cost],
                                         feed_dict=feed_dict)
@@ -196,7 +193,7 @@ class TensorflowModel(object, NetworkIO):
                      news_words_collection, indices, is_train_collection, debug=False):
 
         for index, mbatch in enumerate(minibatches):
-            feed_dict = self.create_feed_dict(sess, mbatch, news_words_collection, self.E.shape[0], debug=debug)
+            feed_dict = self.create_feed_dict(sess, mbatch, news_words_collection, self.E.shape[0], is_train=False, debug=debug)
             uint_labels = sess.run([self.network.Labels], feed_dict=feed_dict)
 
             if debug:
@@ -230,7 +227,7 @@ class TensorflowModel(object, NetworkIO):
 
         return result
 
-    def create_feed_dict(self, sess, mbatch, news_words_collection, total_words_count, debug=False):
+    def create_feed_dict(self, sess, mbatch, news_words_collection, total_words_count, is_train, debug=False):
         """
         returns: dict
             Returns dictionary for tensorflow session

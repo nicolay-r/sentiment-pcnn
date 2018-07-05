@@ -2,7 +2,6 @@ import numpy as np
 from core.evaluation.labels import Label, PositiveLabel, NegativeLabel, NeutralLabel
 
 from networks.processing.samples.base import Sample
-from networks.processing.samples.nlp_sample import NLPSample
 from words import NewsWordsCollection
 from utils import ExtractedRelation
 
@@ -166,8 +165,6 @@ class BagsCollection:
     def _create_sample(self, opinion_vector, position, sample_type):
         if sample_type is self.ST_BASE:
             return Sample(position)
-        elif sample_type is self.ST_NLP:
-            return NLPSample(opinion_vector, position)
 
     def shuffle(self):
         np.random.shuffle(self.bags)

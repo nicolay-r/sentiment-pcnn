@@ -3,11 +3,12 @@ from networks.model import TensorflowModel
 from networks.architectures.cnn import VanillaCNN
 
 from networks.processing.batch import BagsCollection
+from networks.configurations.cnn import CNNConfig
 
 import io_utils
 
 
-class CNN(TensorflowModel):
+class CNNModel(TensorflowModel):
 
     def __init__(
             self,
@@ -20,7 +21,7 @@ class CNN(TensorflowModel):
             bags_per_minibatch=50,
             callback=None):
 
-        super(CNN, self).__init__(
+        super(CNNModel, self).__init__(
             io=io_utils.NetworkIOProvider(),
             word_embedding=word_embedding,
             synonyms_filepath=synonyms_filepath,
@@ -35,11 +36,20 @@ class CNN(TensorflowModel):
     def get_sample_type(self):
         return BagsCollection.ST_BASE
 
-    def set_compiled_network(self, network):
-        assert(isinstance(network, VanillaCNN))
-        self.network = network
+    def compile_network(self, config):
+        assert(isinstance(config, CNNConfig))
+        self.network = VanillaCNN(
+            vocabulary_words=self.E.shape[0],
+            embedding_size=self.E.shape[1],
+            words_per_news=self.words_per_news,
+            bags_per_batch=config.bags_per_minibatch,
+            bag_size=config.bag_size,
+            channels_count=config.filter_size,
+            window_size=config.window_size,
+            dp=config.position_size,
+            dropout=config.dropout)
 
-    def create_feed_dict(self, sess, minibatch, news_words_collection, total_words_count, debug=False):
+    def create_feed_dict(self, sess, minibatch, news_words_collection, total_words_count, is_train, debug=False):
         """
         returns: dict
             Returns dictionary for tf session
