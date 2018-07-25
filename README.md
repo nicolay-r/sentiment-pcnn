@@ -49,7 +49,10 @@ Comparison of CNN and PCNN during training process illustrated in figure below:
 
 ![alt text](docs/f1_and_cost.png)
 > Using default train/test separation of RuSentRel v1.0 collection; filters=200;
-window\_size=3;
+window\_size=3; **left subfigure**: F1(P, N) reults per epoch fot test subset; 
+**right subfigure**: cost values per epoch;
+using piecewise cnn results in training speed, and latter reach better results 
+faster than vanilla cnn.
 
 Installation
 ------------
