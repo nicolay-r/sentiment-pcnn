@@ -10,11 +10,12 @@ Architectures implementation:
 * [[cnn](networks/architectures/cnn.py)]
 * [[pcnn](networks/architectures/pcnn.py)]
 
-For more details, see:
+For more details, see (or [References](#references) section):
 
-1. [CLLS-2018, Presentation slides](docs/slides.pdf)
+1. CEUR Workshop Proceedings [paper](docs/clls-2018-hse.pdf)
 
-2. CEUR Workshop Proceedings (will be added soon)
+2. CLLS-2018, Presentation [slides](docs/slides.pdf)
+
 
 ![alt text](docs/pcnn.png)
 
@@ -44,10 +45,11 @@ Last row represent an asessment of agreement between two annotators.
 | **PCNN** 		      |  0.42     | 0.23   | **0.31** |
 |Expert agreement     |  0.62     | 0.49   | 0.55     |
 
-Comparison of CNN and PCNN during training process illustrated in figures below:
+Comparison of CNN and PCNN during training process illustrated in figure below:
 
-![alt text](docs/f1.png)
-![alt text](docs/cost.png)
+![alt text](docs/f1_and_cost.png)
+> Using default train/test separation of RuSentRel v1.0 collection; filters=200;
+window\_size=3;
 
 Installation
 ------------
@@ -91,6 +93,21 @@ And we are ready to apply model with different settings by simply rinning:
 
 References
 ----------
+
+<a name="references"></a>
+```
+@article{rusnachenko2018piecewisecnn,
+    Author = {Rusnachenko, N. and Loukachevitch, N.},
+    Title = {Using Convolutional Neural Networks for Sentiment Attitude
+             Extraction from Analytical Texts},
+    Journal = {In Proceedings of CEUR Workshop, CLLS-2018 Conference},
+    url = {ceur-ws.org},
+    Year = {2018}
+}
+```
+
+Related works
+-------------
 
 * Daojian Zeng, Kang Liu, Yubo Chen, and Jun Zhao, Distant
 supervision for relation extraction via piecewise convolutional
