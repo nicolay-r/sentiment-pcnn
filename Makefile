@@ -5,8 +5,6 @@ install:
 	cd core && git checkout clls_2018
 	cd data && git checkout clls-2018  # RuSentRel 1.0
 	pip install -r core/dependencies.txt
-	# Unpack data
-	unzip data.zip
 
 download_embedding:
 	wget http://rusvectores.org/static/models/rusvectores2/news_mystem_skipgram_1000_20_2015.bin.gz
