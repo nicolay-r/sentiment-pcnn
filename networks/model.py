@@ -72,11 +72,8 @@ class TensorflowModel(object, NetworkIO):
         self.test_relations_collection = test_relations_collection
         self.test_news_words_collection = test_news_words_collection
 
-        # Set sample type ...
-        sample_type = self.get_sample_type()
-
-        train_bags_collection = BagsCollection(train_relations_collection.relations, bag_size, sample_type=sample_type)
-        test_bags_collection = BagsCollection(test_relations_collection.relations, bag_size, sample_type=sample_type)
+        train_bags_collection = BagsCollection(train_relations_collection.relations, bag_size)
+        test_bags_collection = BagsCollection(test_relations_collection.relations, bag_size)
 
         train_bags_collection.shuffle()
         test_bags_collection.shuffle()
@@ -209,7 +206,7 @@ class TensorflowModel(object, NetworkIO):
             assert(isinstance(opinion_collection, OpinionCollection))
             opinion_collection.save(self.io.get_opinion_output_filepath(index, method_root))
 
-        files_to_compare_list = self.io.get_files_to_compare_list(method_name, indices, is_train_collection)
+        files_to_compare_list = self.io.get_files_to_compare_list(method_name, indices)
 
         evaluator = Evaluator(self.synonyms_filepath, method_root)
         return evaluator.evaluate(files_to_compare_list, debug=debug)
@@ -239,9 +236,6 @@ class TensorflowModel(object, NetworkIO):
         returns: processing.nn.NeuralNetwork
             TensorFlow model implementation
         """
-        raise Exception("Not Implemented")
-
-    def get_sample_type():
         raise Exception("Not Implemented")
 
     def create_news_descriptor(self, n, news, news_words, opinions_collections, is_train):

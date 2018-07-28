@@ -29,5 +29,5 @@ class NetworkIO:
         raise Exception("Not Implemented")
 
     @staticmethod
-    def get_files_to_compare_list(method_name, indices, is_train_collection):
+    def get_files_to_compare_list(method_name, indices):
         raise Exception("Not Implemented")

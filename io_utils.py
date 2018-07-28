@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import io
 
+import numpy as np
 from os import path, makedirs, mkdir
 from networks.io import NetworkIO
 from gensim.models.word2vec import Word2Vec
@@ -91,6 +92,7 @@ def graph_root():
         makedirs(result)
     return result
 
+
 def get_collection_root():
     return path.join(data_root(), "Collection/")
 
@@ -107,8 +109,10 @@ def get_opin_filepath(index, is_etalon, prefix='art', root=get_collection_root()
     assert(type(is_etalon) == bool)
     return path.join(root, "{}{}.opin{}.txt".format(prefix, index, '' if is_etalon else '.result'))
 
+
 def get_constraint_opin_filepath(index, root=get_collection_root()):
     return path.join(root, "art{}.opin.graph.txt".format(index))
+
 
 def get_neutral_filepath(index, is_train, root=get_collection_root()):
     assert(type(is_train) == bool)
@@ -244,7 +248,7 @@ def save_test_opinions(test_opinions, method_name, indices=test_indices()):
         test_opinions[i].save(get_opin_filepath(test_index, is_etalon=False, root=method_root))
 
 
-def create_files_to_compare_list(method_name, indices=test_indices(), root=get_collection_root(), is_train_collection=False):
+def create_files_to_compare_list(method_name, indices=test_indices(), root=get_collection_root()):
     """
     Create list of comparable opinion files for the certain method.
     method_name: str
@@ -257,7 +261,7 @@ def create_files_to_compare_list(method_name, indices=test_indices(), root=get_c
                 i) for i in indices]
 
 
-def indices_to_cv_pairs(cv, indices_list=collection_indices()):
+def indices_to_cv_pairs(cv, indices_list=collection_indices(), shuffle=True, seed=1):
     """
     Splits array of indices into list of pairs (train_indices_list,
     test_indices_list)
@@ -272,6 +276,10 @@ def indices_to_cv_pairs(cv, indices_list=collection_indices()):
             last += avg
 
         return out
+
+    if shuffle:
+        np.random.seed(seed)
+        np.random.shuffle(indices_list)
 
     chunks = chunk_it(indices_list, cv)
 
@@ -312,9 +320,8 @@ class NetworkIOProvider(NetworkIO):
         return get_method_root(method_name)
 
     @staticmethod
-    def get_files_to_compare_list(method_name, indices, is_train_collection):
+    def get_files_to_compare_list(method_name, indices):
         # TODO. Method name (is not root actually). Better to refactor it.
         return create_files_to_compare_list(
             method_name,
-            indices=indices,
-            is_train_collection=is_train_collection)
+            indices=indices)

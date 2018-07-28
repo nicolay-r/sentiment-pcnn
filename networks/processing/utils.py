@@ -1,6 +1,6 @@
 from core.evaluation.labels import Label
 from core.source.opinion import Opinion
-from core.source.vectors import OpinionVectorCollection, OpinionVector
+from core.source.vectors import OpinionVector
 from core.source.news import News
 
 from words import NewsWords
@@ -9,7 +9,7 @@ from words import NewsWords
 class TextPosition:
     """
     Represents an article sample by given newsID,
-    and [left, right] entitiues positions
+    and [left, right] entities positions
     """
 
     def __init__(self, news_ID, left, right):
@@ -22,9 +22,9 @@ class TextPosition:
 
     def equals(self, other):
         assert(isinstance(other, TextPosition))
-        return self._left == other._left \
-               and self._right == other._right \
-               and self._news_ID == other._news_ID
+        return self._left == other._left and \
+               self._right == other._right and \
+               self._news_ID == other._news_ID
 
     @property
     def news_ID(self):

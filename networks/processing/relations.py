@@ -94,9 +94,9 @@ class ExtractedRelationsCollection:
 
                 for r in relations:
 
-                    pos1 = ExtractedRelationsCollection._get_entity_position(
+                    pos_subj = ExtractedRelationsCollection._get_entity_position(
                         r.entity_left_ID, news_descriptor.news_words)
-                    pos2 = ExtractedRelationsCollection._get_entity_position(
+                    pos_obj = ExtractedRelationsCollection._get_entity_position(
                         r.entity_right_ID, news_descriptor.news_words)
 
                     # Add not opinion, but features
@@ -105,7 +105,7 @@ class ExtractedRelationsCollection:
 
                     relation = ExtractedRelation(
                         feature_vector,
-                        TextPosition(news_descriptor.news_index, pos1, pos2),
+                        TextPosition(news_descriptor.news_index, pos_subj, pos_obj),
                         r.get_left_entity_value(),
                         r.get_right_entity_value(),
                         o.sentiment)

@@ -1,13 +1,10 @@
 from model_cnn import CNNModel
 from networks.architectures.pcnn import PiecewiseCNN
-from networks.processing.batch import BagsCollection
+from networks.processing.batch import MiniBatch
 from networks.configurations.cnn import CNNConfig
 
 
 class PCNNModel(CNNModel):
-
-    def get_sample_type(self):
-        return BagsCollection.ST_BASE
 
     def set_compiled_network(self, network):
         assert(isinstance(network, PiecewiseCNN))
@@ -15,13 +12,18 @@ class PCNNModel(CNNModel):
 
     def compile_network(self, config):
         assert(isinstance(config, CNNConfig))
-        self.network = PiecewiseCNN(
-            vocabulary_words=self.E.shape[0],
-            embedding_size=self.E.shape[1],
-            words_per_news=self.words_per_news,
-            bags_per_batch=config.bags_per_minibatch,
-            bag_size=config.bag_size,
-            channels_count=config.filter_size,
-            window_size=config.window_size,
-            dp=config.position_size,
-            dropout=config.dropout)
+        self.network = PiecewiseCNN(config, self.E.shape)
+
+    def create_feed_dict(self, sess, minibatch, news_words_collection, total_words_count, is_train, debug=False):
+        assert(isinstance(minibatch, MiniBatch))
+
+        feed = minibatch.to_network_input(news_words_collection, total_words_count, self.words_per_news)
+
+        return self.network.get_feed_dict(feed[MiniBatch.I_X_INDS],
+                                          feed[MiniBatch.I_LABELS],
+                                          p_subj_ind=feed[MiniBatch.I_SUBJ_IND],
+                                          p_obj_ind=feed[MiniBatch.I_OBJ_IND],
+                                          p_subj_dist=feed[MiniBatch.I_SUBJ_DISTS],
+                                          p_obj_dist=feed[MiniBatch.I_OBJ_DISTS],
+                                          embedding=self.E,
+                                          pos=feed[MiniBatch.I_POS_INDS])

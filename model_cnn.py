@@ -2,7 +2,7 @@
 from networks.model import TensorflowModel
 from networks.architectures.cnn import VanillaCNN
 
-from networks.processing.batch import BagsCollection
+from networks.processing.batch import MiniBatch
 from networks.configurations.cnn import CNNConfig
 
 import io_utils
@@ -33,39 +33,27 @@ class CNNModel(TensorflowModel):
             callback=callback
         )
 
-    def get_sample_type(self):
-        return BagsCollection.ST_BASE
-
     def compile_network(self, config):
         assert(isinstance(config, CNNConfig))
-        self.network = VanillaCNN(
-            vocabulary_words=self.E.shape[0],
-            embedding_size=self.E.shape[1],
-            words_per_news=self.words_per_news,
-            bags_per_batch=config.bags_per_minibatch,
-            bag_size=config.bag_size,
-            channels_count=config.filter_size,
-            window_size=config.window_size,
-            dp=config.position_size,
-            dropout=config.dropout)
+        self.network = VanillaCNN(config, embedding_shape=self.E.shape)
 
     def create_feed_dict(self, sess, minibatch, news_words_collection, total_words_count, is_train, debug=False):
         """
         returns: dict
             Returns dictionary for tf session
         """
+        assert (isinstance(minibatch, MiniBatch))
+
         if debug:
             print "CNN feed dictionary"
 
-        X, p1, p2, P1, P2, y = minibatch.to_network_input(
-            news_words_collection, total_words_count, self.words_per_news)
+        feed = minibatch.to_network_input(news_words_collection,
+                                          total_words_count,
+                                          self.words_per_news)
 
-        feed_dict = {self.network.x: X,
-                     self.network.y: y,
-                     self.network.P1: P1,
-                     self.network.P2: P2,
-                     self.network.p1_ind: p1,
-                     self.network.p2_ind: p2,
-                     self.network.E: self.E}
-
-        return feed_dict
+        return self.network.get_feed_dict(feed[MiniBatch.I_X_INDS],
+                                          feed[MiniBatch.I_LABELS],
+                                          dist_from_subj=feed[MiniBatch.I_SUBJ_DISTS],
+                                          dist_from_obj=feed[MiniBatch.I_OBJ_DISTS],
+                                          embedding=self.E,
+                                          pos=feed[MiniBatch.I_POS_INDS])

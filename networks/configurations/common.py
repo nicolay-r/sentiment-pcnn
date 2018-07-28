@@ -1,4 +1,7 @@
+import os
 import tensorflow as tf
+from gensim.models.word2vec import Word2Vec
+from core.runtime.embeddings import RusvectoresEmbedding
 
 
 class CommonSettings:
@@ -9,5 +12,9 @@ class CommonSettings:
         epsilon=10e-6,
         rho=0.95)
 
+    @staticmethod
+    def load_embedding():
+        w2v_filepath = os.path.join(os.path.dirname(__file__),
+                                    "../../data/w2v/news_rusvectores2.bin.gz")
 
-
+        return RusvectoresEmbedding(Word2Vec.load_word2vec_format(w2v_filepath, binary=True))
