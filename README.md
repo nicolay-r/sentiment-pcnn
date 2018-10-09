@@ -54,6 +54,10 @@ window\_size=3; **left subfigure**: F1(P, N) reults per epoch fot test subset;
 using piecewise cnn results in training speed, and latter reach better results 
 faster than vanilla cnn.
 
+> **NOTE:** For cost evaluation, we use `tf.nn.sparse_softmax_cross_entropy_with_logits()` which 
+compares results by an exact class, not by distribution; **class weights** were not taken
+into account.
+
 Installation
 ------------
 
