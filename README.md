@@ -1,4 +1,4 @@
-# Sentiment Piecewise Convolutional Neural Network
+``# Sentiment Piecewise Convolutional Neural Network
 ![](https://img.shields.io/badge/Python-2.7-brightgreen.svg)
 ![](https://img.shields.io/badge/TensorFlow-1.4.1-yellowgreen.svg)
 
@@ -53,6 +53,10 @@ window\_size=3; **left subfigure**: F1(P, N) reults per epoch fot test subset;
 **right subfigure**: cost values per epoch;
 using piecewise cnn results in training speed, and latter reach better results 
 faster than vanilla cnn.
+
+> **NOTE:** For cost evaluation, we use `tf.nn.sparse_softmax_cross_entropy_with_logits()` which 
+compares results by an exact class, not by distribution; class weights were not taken
+into account.
 
 Installation
 ------------
