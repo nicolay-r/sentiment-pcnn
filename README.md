@@ -25,6 +25,17 @@ We use [RuSentRel 1.0](https://github.com/nicolay-r/RuSentRel/tree/v1.0/)
 corpus consisted of analytical articles from Internet-portal
 inosmi.ru.
 
+
+This collection provides an attitudes for whole articles. 
+Therefore it is necessary to find a **context**(s) related to each attitude -- 
+a part of text, which includes Subject and Object.
+
+For **sentiment attitudes** (about 10%) we kept all sentences that has related object and subject, and assume such contexts with the related attitude label.
+> We kept all sentences (instead of the first appeared) because the lack of sentiment contexts in comparison with neutral one.
+
+For **neutral attitudes** (about 90%) we kept only first appeared sentence that has related object and subject.
+
+
 Results
 -------
 Model [[configuration](networks/configurations/cnn.py)].
