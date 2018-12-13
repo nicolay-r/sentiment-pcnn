@@ -118,7 +118,7 @@ References
     Author = {Rusnachenko, N. and Loukachevitch, N.},
     Title = {Using Convolutional Neural Networks for Sentiment Attitude
              Extraction from Analytical Texts},
-    Journal = {In Proceedings of CEUR Workshop, CLLS-2018 Conference},
+    Journal = {In Proceedings of CEUR Workshop, DAMDID-2018 Conference},
     url = {ceur-ws.org},
     Year = {2018}
 }
