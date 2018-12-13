@@ -12,7 +12,7 @@ Architectures implementation:
 
 For more details, see (or [References](#references) section):
 
-1. CEUR Workshop Proceedings [paper](docs/clls-2018-hse.pdf)
+1. CLLS Paper (CEUR Workshop Proceedings) [paper](docs/clls-2018-hse.pdf)
 
 2. CLLS-2018, Presentation [slides](docs/slides.pdf)
 
@@ -116,8 +116,8 @@ References
 ```
 @article{rusnachenko2018piecewisecnn,
     Author = {Rusnachenko, N. and Loukachevitch, N.},
-    Title = {Using Convolutional Neural Networks for Sentiment Attitude
-             Extraction from Analytical Texts},
+    Title = {Extracting Sentiment Attitudes from Analytical Texts via 
+             Piecewise Convolutional Neural Network},
     Journal = {In Proceedings of CEUR Workshop, DAMDID-2018 Conference},
     url = {ceur-ws.org},
     Year = {2018}
