@@ -2,46 +2,46 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 
-import core.env as env
 import io_utils
+from classifiers.configuration import CommonSettings
 from core.evaluation.labels import NeutralLabel
+from core.runtime.relations import Relation
+from core.processing.lemmatization.base import Stemmer
 from core.source.entity import EntityCollection
 from core.source.news import News
 from core.source.opinion import OpinionCollection, Opinion
 from core.source.synonyms import SynonymsCollection
-from core.runtime.relations import Relation
-
-IGNORED_ENTITIES = io_utils.get_ignored_entity_values()
 
 
-def opinions_between_entities(E, diff, news, synonyms, sentiment_opins=None):
-    """ Relations that had the same difference
+def opinions_between_entities(E, diff, news, synonyms, is_ignored_entity, stemmer, sentiment_opins=None):
     """
-    def try_add_opinion(o, added, neutral_opins):
-        assert(isinstance(o, Opinion))
+    Relations that had the same difference
+    """
+    assert(isinstance(news, News))
+    assert(isinstance(synonyms, SynonymsCollection))
+    assert(callable(is_ignored_entity))
+    assert(isinstance(stemmer, Stemmer))
+
+    def can_add(opinion, neutral_opins):
+        assert(isinstance(opinion, Opinion))
         assert(isinstance(neutral_opins, OpinionCollection))
 
         # Filter if there is a sentiment relation
         if sentiment_opins is not None:
-            if sentiment_opins.has_opinion_by_synonyms(o):
-                return
+            if sentiment_opins.has_opinion_by_synonyms(opinion):
+                return False
 
-        if neutral_opins.has_opinion_by_synonyms(o):
-            return
+        if neutral_opins.has_opinion_by_synonyms(opinion):
+            return False
 
-        added.add(o.create_value_id())
-        neutral_opins.add_opinion(o)
-
-    def is_ignored(entity):
-        # TODO. Move ignored entities into processing.
-        return env.stemmer.lemmatize_to_str(entity.value) in IGNORED_ENTITIES
+        return True
 
     def get_entity_synonyms(entity):
         return synonyms.get_synonyms_list(entity.value), \
                synonyms.get_synonym_group_index(entity.value)
 
     added = set()
-    c = OpinionCollection(opinions=None, synonyms=synonyms)
+    c = OpinionCollection(opinions=None, synonyms=synonyms, stemmer=stemmer)
 
     for i in range(E.shape[0]):
         for j in range(E.shape[1]):
@@ -52,7 +52,7 @@ def opinions_between_entities(E, diff, news, synonyms, sentiment_opins=None):
             e1 = news.entities.get_entity_by_index(i)
             e2 = news.entities.get_entity_by_index(j)
 
-            if is_ignored(e1) or is_ignored(e2):
+            if is_ignored_entity(e1) or is_ignored_entity(e2):
                 continue
 
             if not synonyms.has_synonym(e1.value):
@@ -73,30 +73,44 @@ def opinions_between_entities(E, diff, news, synonyms, sentiment_opins=None):
                     r_left.encode('utf-8'), r_right.encode('utf-8'))
                 continue
 
-            try_add_opinion(Opinion(r_left, r_right, NeutralLabel()), added, c)
-            try_add_opinion(Opinion(r_right, r_left, NeutralLabel()), added, c)
+            o = c.create_opinion(r_left, r_right, NeutralLabel())
+            if can_add(o, c):
+                added.add(o.create_value_id())
+                c.add_opinion(o)
+
+            o = c.create_opinion(r_right, r_left, NeutralLabel())
+            if can_add(o, c):
+                added.add(o.create_value_id())
+                c.add_opinion(o)
 
     return c
 
 
-def make_neutrals(news, synonyms_collection, opinions=None):
+def make_neutrals(news, synonyms_collection, is_ignored_entity, stemmer, opinions=None):
+    assert(isinstance(news, News))
+    assert(isinstance(synonyms_collection, SynonymsCollection))
+    assert(isinstance(stemmer, Stemmer))
+    assert(callable(is_ignored_entity))
+
     entities = news.entities
     E = np.zeros((entities.count(), entities.count()), dtype='int32')
     for e1 in entities:
         for e2 in entities:
             i = e1.get_int_ID()
             j = e2.get_int_ID()
-            relation = Relation(e1.ID, e2.ID, news)
+            relation = Relation(i, j, news)
             E[i-1][j-1] = -1 if i == j else relation.get_distance_in_sentences()
 
-    return opinions_between_entities(
-        E, 0, news, synonyms_collection, sentiment_opins=opinions)
+    return opinions_between_entities(E, 0, news, synonyms_collection,
+                                     is_ignored_entity,
+                                     stemmer=stemmer,
+                                     sentiment_opins=opinions)
 
 
 #
 # Main
 #
-synonyms = SynonymsCollection.from_file(io_utils.get_synonyms_filepath())
+synonyms = SynonymsCollection.from_file(io_utils.get_synonyms_filepath(), stemmer=CommonSettings.stemmer)
 
 #
 # Collection as a Train Data
@@ -109,11 +123,16 @@ for n in io_utils.collection_indices():
 
     print "Create neutral file: '{}'".format(neutral_filepath)
 
-    entities = EntityCollection.from_file(entity_filepath)
-    news = News.from_file(news_filepath, entities)
-    opinions = OpinionCollection.from_file(opin_filepath, io_utils.get_synonyms_filepath())
+    entities = EntityCollection.from_file(entity_filepath, stemmer=CommonSettings.stemmer)
+    news = News.from_file(news_filepath, entities, stemmer=CommonSettings.stemmer)
+    opinions = OpinionCollection.from_file(opin_filepath,
+                                           io_utils.get_synonyms_filepath(),
+                                           stemmer=CommonSettings.stemmer)
 
-    neutral_opins = make_neutrals(news, synonyms, opinions)
+    neutral_opins = make_neutrals(news, synonyms,
+                                  lambda e_value: io_utils.is_ignored_entity_value(e_value, CommonSettings.stemmer),
+                                  CommonSettings.stemmer, opinions)
+
     neutral_opins.save(neutral_filepath)
 
 #
@@ -126,8 +145,10 @@ for n in io_utils.collection_indices():
 
     print "Create neutral file: '{}'".format(neutral_filepath)
 
-    entities = EntityCollection.from_file(entity_filepath)
-    news = News.from_file(news_filepath, entities)
+    entities = EntityCollection.from_file(entity_filepath, stemmer=CommonSettings.stemmer)
+    news = News.from_file(news_filepath, entities, stemmer=CommonSettings.stemmer)
 
-    neutral_opins = make_neutrals(news, synonyms)
+    neutral_opins = make_neutrals(news, synonyms,
+                                  lambda e_value: io_utils.is_ignored_entity_value(e_value, CommonSettings.stemmer),
+                                  CommonSettings.stemmer)
     neutral_opins.save(neutral_filepath)

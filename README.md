@@ -12,9 +12,8 @@ Architectures implementation:
 
 For more details, see (or [References](#references) section):
 
-1. CLLS Paper (CEUR Workshop Proceedings) [paper](docs/clls-2018-hse.pdf)
-
-2. CLLS-2018, Presentation [slides](docs/slides.pdf)
+1. CLLS-2018, Presentation [slides](docs/slides.pdf)
+2. DAMDID-2018, [paper](http://ceur-ws.org/Vol-2277/paper33.pdf)
 
 
 ![alt text](docs/pcnn.png)
@@ -58,7 +57,7 @@ Last row represent an asessment of agreement between two annotators.
 
 Comparison of CNN and PCNN during training process illustrated in figure below:
 
-![alt text](docs/f1_and_cost.png)
+![alt text](docs/pcnn.png)
 > Using default train/test separation of RuSentRel v1.0 collection; filters=200;
 window\_size=3; **left subfigure**: F1(P, N) reults per epoch fot test subset; 
 **right subfigure**: cost values per epoch;
@@ -80,8 +79,8 @@ source my_env/bin/activate
 ```
 
 Use `Makefile` to install
-[core](https://github.com/nicolay-r/sentiment-erc-core) library and download
-[dataset](https://github.com/nicolay-r/RuSentRel/tree/v1.0/):
+[core v0.19.1](https://github.com/nicolay-r/sentiment-erc-core/tree/release_19_1) library and download
+[RuSentRel-v1.0](https://github.com/nicolay-r/RuSentRel/tree/v1.0/):
 ```
 make install
 ```
@@ -104,10 +103,21 @@ At first, we compose a list of neutral relations per each article by running:
 ```
 ./neutrals.py
 ```
-And we are ready to apply model with different settings by simply rinning:
+And we are ready to apply model (CNN) with different settings by simply running:
 ```
-./predict_cnn.py
+./predict/context/cnn.py
 ```
+or PCNN as follows:
+```
+./predict/context/pcnn.py
+```
+
+To apply neural network to get aggregated results, use the following script next,
+which evaluates result in case of different cell types of rnn modes (RNN, GRU, LSTM):
+```
+./predict/text/rnn_all.py
+```
+
 
 References
 ----------

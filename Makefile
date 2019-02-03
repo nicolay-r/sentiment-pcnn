@@ -2,7 +2,7 @@ install:
 	# Download and install core library python dependencies
 	git clone https://github.com/nicolay-r/sentiment-erc-core core
 	git clone https://github.com/nicolay-r/RuSentRel data
-	cd core && git checkout clls_2018
+	cd core && git checkout release_19_1
 	cd data && git checkout clls-2018  # RuSentRel 1.0
 	pip install -r core/dependencies.txt
 

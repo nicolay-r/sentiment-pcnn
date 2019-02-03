@@ -1,18 +1,19 @@
 #!/usr/bin/python
 import io
-
 import numpy as np
 from os import path, makedirs, mkdir
-from networks.io import NetworkIO
+from os.path import dirname
 from gensim.models.word2vec import Word2Vec
+from core.processing.lemmatization.base import Stemmer
 from core.evaluation.statistic import FilesToCompare
 
 ignored_entity_values = [u"author", u"unknown"]
 TEST = 'test'
 TRAIN = 'train'
 
+
 def get_server_root():
-    return '/home/nicolay/storage/disk/homes/nicolay/datasets/news'
+    return u'/home/nicolay/storage/disk/homes/nicolay/datasets/news'
 
 
 def read_prepositions(filepath):
@@ -61,85 +62,99 @@ def collection_indices():
     return train_indices() + test_indices()
 
 
-def get_ignored_entity_values():
-    return ignored_entity_values
+def is_ignored_entity_value(entity_value, stemmer):
+    """
+    entity_value: unicode
+    stemmer: Stemmer
+    return: bool
+    """
+    assert(isinstance(entity_value, unicode))
+    assert(isinstance(stemmer, Stemmer))
+    return stemmer.lemmatize_to_str(entity_value) in ignored_entity_values
 
 
 def data_root():
-    return "data/"
+    return path.join(dirname(__file__), u"data/")
 
 
 def eval_root():
-    return path.join(data_root(), "Eval/")
+    return path.join(data_root(), u"Eval/")
 
 
 def test_root():
-    result = path.join(data_root(), "Test/")
+    result = path.join(data_root(), u"Test/")
     if not path.exists(result):
         makedirs(result)
     return result
 
 
-def load_w2v_model(filepath=path.join(data_root(), "w2v/news_rusvectores2.bin.gz"), binary=True):
-    print "Loading word2vec model '{}' ...".format(filepath)
+def pretrained_root():
+    result = path.join(data_root(), u"Pretrained/")
+    if not path.exists(result):
+        makedirs(result)
+    return result
+
+
+def load_w2v_model(filepath=path.join(data_root(), u"w2v/news_rusvectores2.bin.gz"), binary=True):
+    print u"Loading word2vec model '{}' ...".format(filepath)
     w2v_model = Word2Vec.load_word2vec_format(filepath, binary=binary)
     return w2v_model
 
 
 def graph_root():
-    result = path.join(data_root(), "Graphs/")
+    result = path.join(data_root(), u"Graphs/")
     if not path.exists(result):
         makedirs(result)
     return result
 
 
 def get_collection_root():
-    return path.join(data_root(), "Collection/")
+    return path.join(data_root(), u"Collection/")
 
 
 def get_entity_filepath(index, root=get_collection_root()):
-    return path.join(root, "art{}.ann".format(index))
+    return path.join(root, u"art{}.ann".format(index))
 
 
 def get_news_filepath(index, root=get_collection_root()):
-    return path.join(root, "art{}.txt".format(index))
+    return path.join(root, u"art{}.txt".format(index))
 
 
-def get_opin_filepath(index, is_etalon, prefix='art', root=get_collection_root()):
-    assert(type(is_etalon) == bool)
-    return path.join(root, "{}{}.opin{}.txt".format(prefix, index, '' if is_etalon else '.result'))
+def get_opin_filepath(index, is_etalon, prefix=u'art', root=get_collection_root()):
+    assert(isinstance(is_etalon, bool))
+    return path.join(root, u"{}{}.opin{}.txt".format(prefix, index, '' if is_etalon else u'.result'))
 
 
 def get_constraint_opin_filepath(index, root=get_collection_root()):
-    return path.join(root, "art{}.opin.graph.txt".format(index))
+    return path.join(root, u"art{}.opin.graph.txt".format(index))
 
 
 def get_neutral_filepath(index, is_train, root=get_collection_root()):
-    assert(type(is_train) == bool)
-    return path.join(root, "art{}.neut.{}.txt".format(index, TRAIN if is_train else TEST))
+    assert(isinstance(is_train, bool))
+    return path.join(root, u"art{}.neut.{}.txt".format(index, TRAIN if is_train else TEST))
 
 
 def get_vectors_filepath(index, is_train, root=get_collection_root()):
-    assert(type(is_train) == bool)
-    return path.join(root, "art{}.vectors.{}.txt".format(index, TRAIN if is_train else TEST))
+    assert(isinstance(is_train, bool))
+    return path.join(root, u"art{}.vectors.{}.txt".format(index, TRAIN if is_train else TEST))
 
 
 def eval_rfe_root():
-    result = path.join(eval_root(), "rfe")
+    result = path.join(eval_root(), u"rfe")
     if not path.exists(result):
         makedirs(result)
     return result
 
 
 def eval_sfm_root():
-    result = path.join(eval_root(), "sfm")
+    result = path.join(eval_root(), u"sfm")
     if not path.exists(result):
         makedirs(result)
     return result
 
 def eval_sfm_cv_root(cv_count):
-    assert(type(cv_count) == int)
-    result = path.join(eval_root(), "sfm_{}".format(cv_count))
+    assert(isinstance(cv_count, int))
+    result = path.join(eval_root(), u"sfm_{}".format(cv_count))
     if not path.exists(result):
         makedirs(result)
     return result
@@ -148,66 +163,66 @@ def eval_sfm_cv_root(cv_count):
 def eval_ec_root():
     """ class elemination root
     """
-    result = path.join(eval_root(), "ce")
+    result = path.join(eval_root(), u"ce")
     if not path.exists(result):
         makedirs(result)
     return result
 
 
 def eval_univariate_root():
-    result = path.join(eval_root(), "uv")
+    result = path.join(eval_root(), u"uv")
     if not path.exists(result):
         makedirs(result)
     return result
 
 
 def eval_default_root():
-    result = path.join(eval_root(), "default")
+    result = path.join(eval_root(), u"default")
     if not path.exists(result):
         makedirs(result)
     return result
 
 
 def eval_default_cv_root(cv_count):
-    assert(type(cv_count) == int)
-    result = path.join(eval_root(), "default_cv_{}".format(cv_count))
+    assert(isinstance(cv_count, int))
+    result = path.join(eval_root(), u"default_cv_{}".format(cv_count))
     if not path.exists(result):
         makedirs(result)
     return result
 
 
 def eval_ensemble_cv_root(cv_count):
-    assert(type(cv_count) == int)
-    result = path.join(eval_root(), "ensemble_cv_{}".format(cv_count))
+    assert(isinstance(cv_count, int))
+    result = path.join(eval_root(), u"ensemble_cv_{}".format(cv_count))
     if not path.exists(result):
         makedirs(result)
     return result
 
 
 def eval_ensemble_root():
-    result = path.join(eval_root(), "ensemble")
+    result = path.join(eval_root(), u"ensemble")
     if not path.exists(result):
         makedirs(result)
     return result
 
 
 def eval_baseline_root():
-    result = path.join(eval_root(), "baseline")
+    result = path.join(eval_root(), u"baseline")
     if not path.exists(result):
         makedirs(result)
     return result
 
 
 def eval_baseline_cv_root(cv_count):
-    assert(type(cv_count) == int)
-    result = path.join(eval_root(), "baseline_cv_{}".format(cv_count))
+    assert(isinstance(cv_count, int))
+    result = path.join(eval_root(), u"baseline_cv_{}".format(cv_count))
     if not path.exists(result):
         makedirs(result)
     return result
 
 
 def eval_features_filepath():
-    return path.join(eval_root(), 'features')
+    return path.join(eval_root(), u'features')
 
 
 def get_method_root(method_name):
@@ -224,15 +239,19 @@ def get_vectors_list(is_train, indices=None, root=get_collection_root()):
 
 
 def get_etalon_root():
-    return path.join(data_root(), "Etalon/")
+    return path.join(data_root(), u"Etalon/")
 
 
 def get_synonyms_filepath():
-    return path.join(data_root(), "synonyms.txt")
+    return path.join(data_root(), u"synonyms.txt")
 
 
 def get_feature_names_filepath():
-    return path.join(data_root(), "feature_names.txt")
+    return path.join(data_root(), u"feature_names.txt")
+
+
+def get_log_csv_filepath(file_name):
+    return path.join(eval_root(), u'{}.csv'.format(file_name))
 
 
 def save_test_opinions(test_opinions, method_name, indices=test_indices()):
@@ -291,37 +310,3 @@ def indices_to_cv_pairs(cv, indices_list=collection_indices(), shuffle=True, see
         test = chunk
 
         yield train, test
-
-
-class NetworkIOProvider(NetworkIO):
-
-    @staticmethod
-    def get_entity_filepath(article_index):
-        return get_entity_filepath(article_index)
-
-    @staticmethod
-    def get_news_filepath(article_index):
-        return get_news_filepath(article_index)
-
-    @staticmethod
-    def get_opinion_input_filepath(article_index):
-        return get_opin_filepath(article_index, is_etalon=True)
-
-    @staticmethod
-    def get_opinion_output_filepath(article_index, model_root):
-        return get_opin_filepath(article_index, is_etalon=False, root=model_root)
-
-    @staticmethod
-    def get_neutral_filepath(article_index, is_train_collection):
-        return get_neutral_filepath(article_index, is_train=is_train_collection)
-
-    @staticmethod
-    def get_model_root(method_name):
-        return get_method_root(method_name)
-
-    @staticmethod
-    def get_files_to_compare_list(method_name, indices):
-        # TODO. Method name (is not root actually). Better to refactor it.
-        return create_files_to_compare_list(
-            method_name,
-            indices=indices)
