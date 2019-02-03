@@ -37,7 +37,7 @@ For **neutral attitudes** (about 90%) we kept only first appeared sentence that 
 
 Results
 -------
-Model [[configuration](networks/configurations/cnn.py)].
+Model [[configuration](networks/configurations/base.py)].
 Table below illustrates CNN/PCNN results in comparison with **baselines**
 (neg, pos, distr), and **classifiers** (KNN, SVM, Random Forest)
 based on handcrafted NLP features.
@@ -51,22 +51,19 @@ Last row represent an asessment of agreement between two annotators.
 |KNN                  |  0.18     | 0.06   | 0.09     |
 |SVM (GRID)           |  0.09     | 0.36   | 0.15     |
 |Random forest (GRID) |  0.41     | 0.21   | 0.27     |
-| **CNN**  		      |  0.41     | 0.23   | **0.31** |
-| **PCNN** 		      |  0.42     | 0.23   | **0.31** |
+| **CNN**  		      |  0.41     | 0.23   | 0.31     |
+| **PCNN** 		      |  0.42     | 0.23   | 0.31     |
+| **PCNN with rnn**   |  0.37     | 0.29   | 0.32     |  
+| **PCNN with lstm**  |  0.37     | 0.30   | 0.32     |  
+| **PCNN with gru**   |  0.37     | 0.29   | 0.32     |  
+| **PCNN with avg**   |  0.37     | 0.32   | 0.33     |  
 |Expert agreement     |  0.62     | 0.49   | 0.55     |
-
-Comparison of CNN and PCNN during training process illustrated in figure below:
-
-![alt text](docs/pcnn.png)
-> Using default train/test separation of RuSentRel v1.0 collection; filters=200;
-window\_size=3; **left subfigure**: F1(P, N) reults per epoch fot test subset; 
-**right subfigure**: cost values per epoch;
-using piecewise cnn results in training speed, and latter reach better results 
-faster than vanilla cnn.
 
 > **NOTE:** For cost evaluation, we use `tf.nn.sparse_softmax_cross_entropy_with_logits()` which 
 compares results by an exact class, not by distribution; **class weights** were not taken
 into account.
+
+![alt text](docs/experiments.png)
 
 Installation
 ------------
