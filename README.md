@@ -14,15 +14,15 @@ The ```master``` branch represents the latest implementation.
 Experiment details presented in branches, and the historical changeset is as follows:
 1. 2018 -- Original implementation, classification is strongly by contexts:
     * **DAMDID-2018** Conference [[paper](http://ceur-ws.org/Vol-2277/paper33.pdf)] 
-        [[branch](https://github.com/nicolay-r/sentiment-pcnn/tree/damdid_2018)]
+        [[branch](https://github.com/nicolay-r/sentiment-pcnn/tree/damdid-2018)]
     * **RUSSIR-2018** Conference (Not published)
-        [[branch](https://github.com/nicolay-r/sentiment-pcnn/tree/russir_2018)]
+        [[branch](https://github.com/nicolay-r/sentiment-pcnn/tree/russir-2018)]
     * **CLLS-2018** Conference (Were not published, includes [[presentation slides](docs/slides.pdf)])
-        [[branch](https://github.com/nicolay-r/sentiment-pcnn/tree/clls_2018)]
+        [[branch](https://github.com/nicolay-r/sentiment-pcnn/tree/clls-2018)]
 1. 2019 -- Implementation has been significantly refactored. Application of aggregation function of related contexts with different functions,
     and recurrent neural networks:
     * **CCIS-1003** Journal
-        [[branch](https://github.com/nicolay-r/sentiment-pcnn/tree/ccis_2019)]
+        [[branch](https://github.com/nicolay-r/sentiment-pcnn/tree/ccis-2019)]
 
 ![alt text](docs/pcnn.png)
 
