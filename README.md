@@ -6,6 +6,8 @@ This project represents an implementation of PCNN [[zeng2015distant](http://www.
 *Piecewise Convolutional Neural Network*, written in Tensorflow.
 Considered as an application for sentiment attitudes extraction task.
 
+![alt text](docs/pcnn.png)
+
 Architectures implementation:
 * [[cnn](networks/context/architectures/cnn.py)]
 * [[pcnn](networks/context/architectures/pcnn.py)]
@@ -24,7 +26,6 @@ Experiment details presented in branches, and the historical changeset is as fol
     * **CCIS-1003** Journal
         [[branch](https://github.com/nicolay-r/sentiment-pcnn/tree/ccis-2019)]
 
-![alt text](docs/pcnn.png)
 
 Dataset
 -------
