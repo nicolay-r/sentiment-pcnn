@@ -12,14 +12,19 @@ Architectures implementation:
 * [[cnn](networks/context/architectures/cnn.py)]
 * [[pcnn](networks/context/architectures/pcnn.py)]
 
+Model configuration parameters:
+* [[base](networks/context/configurations/base.py)]
+* [[cnn/pcnn](networks/context/configurations/cnn.py)]
+
 The ```master``` branch represents the latest implementation.
-Experiment details presented in branches, and the historical changeset is as follows:
+Experiment details presented in other branches.
+The historical changeset is as follows:
 1. 2018 -- Original implementation, classification is strongly by contexts:
     * **DAMDID-2018** Conference [[paper](http://ceur-ws.org/Vol-2277/paper33.pdf)] 
         [[branch](https://github.com/nicolay-r/sentiment-pcnn/tree/damdid-2018)]
     * **RUSSIR-2018** Conference (Not published)
         [[branch](https://github.com/nicolay-r/sentiment-pcnn/tree/russir-2018)]
-    * **CLLS-2018** Conference (Were not published, includes [[presentation slides](docs/slides.pdf)])
+    * **CLLS-2018** Conference (Were not published, includes presentation slides)
         [[branch](https://github.com/nicolay-r/sentiment-pcnn/tree/clls-2018)]
 1. 2019 -- Implementation has been significantly refactored. Application of aggregation function of related contexts with different functions,
     and recurrent neural networks:
@@ -85,7 +90,6 @@ which evaluates result in case of different cell types of rnn modes (RNN, GRU, L
 
 Related works
 -------------
-
 * Daojian Zeng, Kang Liu, Yubo Chen, and Jun Zhao, Distant
 supervision for relation extraction via piecewise convolutional
 neural networks, Proceedings of the 2015 Conference on
