@@ -21,15 +21,14 @@ Experiment details presented in other branches.
 The historical changeset is as follows:
 1. 2018 -- Original implementation, classification is strongly by contexts:
     * **DAMDID-2018** Conference [[paper](http://ceur-ws.org/Vol-2277/paper33.pdf)] 
-        [[branch](https://github.com/nicolay-r/sentiment-pcnn/tree/damdid-2018)]
+        [[code](https://github.com/nicolay-r/sentiment-pcnn/tree/damdid-2018)]
     * **RUSSIR-2018** Conference (Not published)
-        [[branch](https://github.com/nicolay-r/sentiment-pcnn/tree/russir-2018)]
+        [[code](https://github.com/nicolay-r/sentiment-pcnn/tree/russir-2018)]
     * **CLLS-2018** Conference (Were not published, includes presentation slides)
-        [[branch](https://github.com/nicolay-r/sentiment-pcnn/tree/clls-2018)]
-1. 2019 -- Implementation has been significantly refactored. Application of aggregation function of related contexts with different functions,
-    and recurrent neural networks:
+        [[code](https://github.com/nicolay-r/sentiment-pcnn/tree/clls-2018)]
+1. 2019 -- Implementation has been significantly refactored. Application of aggregation function of related contexts with different functions, especially with RNN application:
     * **CCIS-1003** Journal
-        [[branch](https://github.com/nicolay-r/sentiment-pcnn/tree/ccis-2019)]
+        [[code](https://github.com/nicolay-r/sentiment-pcnn/tree/ccis-2019)]
 
 
 Dataset
