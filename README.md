@@ -16,6 +16,8 @@ Model configuration parameters:
 * [[base](networks/context/configurations/base.py)]
 * [[cnn/pcnn](networks/context/configurations/cnn.py)]
 
+Changeset
+---------
 The ```master``` branch represents the latest implementation.
 Experiment details presented in other branches.
 The historical changeset is as follows:
