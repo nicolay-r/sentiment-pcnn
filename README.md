@@ -12,8 +12,9 @@ Architectures implementation:
 
 For more details, see (or [References](#references) section):
 
-1. CEUR Workshop Proceedings [paper](docs/clls-2018-hse.pdf)
-
+1. [[paper]](https://doi.org/10.29007/26g7) in
+    Proceedings of Third Workshop "Computational linguistics and language science"
+    
 2. CLLS-2018, Presentation [slides](docs/slides.pdf)
 
 
@@ -103,14 +104,20 @@ References
 
 <a name="references"></a>
 ```
-@article{rusnachenko2018piecewisecnn,
-    Author = {Rusnachenko, N. and Loukachevitch, N.},
-    Title = {Using Convolutional Neural Networks for Sentiment Attitude
-             Extraction from Analytical Texts},
-    Journal = {In Proceedings of CEUR Workshop, CLLS-2018 Conference},
-    url = {ceur-ws.org},
-    Year = {2018}
-}
+@inproceedings{CLLS2018:Using_Convolutional_Neural_Networks,
+  author    = {Nicolay Rusnachenko and Natalia Loukachevitch},
+  title     = {Using Convolutional Neural Networks for Sentiment Attitude Extraction from Analytical Texts},
+  booktitle = {Proceedings of Third Workshop "Computational linguistics and language science"},
+  editor    = {Gerhard Wohlgenannt and Ruprecht von Waldenfels and Svetlana Toldova and Ekaterina Rakhilina and Denis Paperno and Olga Lyashevskaya and Natalia Loukachevitch and Sergei O. Kuznetsov and Olga Kultepina and Dmitry Ilvovsky and Boris Galitsky and Ekaterina Artemova and Elena Bolshakova},
+  series    = {EPiC Series in Language and Linguistics},
+  volume    = {4},
+  pages     = {1--10},
+  year      = {2019},
+  publisher = {EasyChair},
+  bibsource = {EasyChair, https://easychair.org},
+  issn      = {2398-5283},
+  url       = {https://easychair.org/publications/paper/pQrC},
+  doi       = {10.29007/26g7}}
 ```
 
 Related works
