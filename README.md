@@ -42,56 +42,6 @@ We use [RuSentRel 1.0](https://github.com/nicolay-r/RuSentRel/tree/v1.0/)
 corpus consisted of analytical articles from Internet-portal
 inosmi.ru.
 
-Installation
-------------
-
-Using [virtualenv](https://www.pythoncentral.io/how-to-install-virtualenv-python/).
-Create virtual environment, suppose `my_env`, and activate it as follows:
-```
-virtualenv my_env
-source my_env/bin/activate
-```
-
-Use `Makefile` to install
-[re-core v0.19.1](https://github.com/nicolay-r/sentiment-erc-core/tree/release_19_1) library and download
-[RuSentRel-v1.0](https://github.com/nicolay-r/RuSentRel/tree/v1.0/):
-```
-make install
-```
-
-We use word2vec
-[model](http://rusvectores.org/static/models/rusvectores2/news_mystem_skipgram_1000_20_2015.bin.gz)
-which were taken from rusvectores.org and used for an embedding layer completion:
-```
-make download_model
-```
-
-Usage
------
-The dataset provides only sentiment attitudes.
-For extraction of positive and negative attitudes we additionally introduce
-(extract from news) **neutral attudes** to distinguish really sentiment
-attitudes from neutral one.
-
-At first, we compose a list of neutral relations per each article by running:
-```
-./neutrals.py
-```
-And we are ready to apply model (CNN) with different settings by simply running:
-```
-./predict/context/cnn.py
-```
-or PCNN as follows:
-```
-./predict/context/pcnn.py
-```
-
-To apply neural network to get aggregated results, use the following script next,
-which evaluates result in case of different cell types of rnn modes (RNN, GRU, LSTM):
-```
-./predict/text/rnn_all.py
-```
-
 Related works
 -------------
 * Daojian Zeng, Kang Liu, Yubo Chen, and Jun Zhao, Distant

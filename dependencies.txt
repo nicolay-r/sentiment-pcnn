@@ -1,3 +1,0 @@
-pymystem3==0.1.9
-pandas==0.20.3
-tensorflow==1.4.1
