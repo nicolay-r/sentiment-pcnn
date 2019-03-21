@@ -16,6 +16,8 @@ Model configuration parameters:
 * [[base](networks/context/configurations/base.py)]
 * [[cnn/pcnn](networks/context/configurations/cnn.py)]
 
+Changeset
+---------
 The ```master``` branch represents the latest implementation.
 Experiment details presented in other branches.
 The historical changeset is as follows:
@@ -27,6 +29,7 @@ The historical changeset is as follows:
         [[paper](https://github.com/nicolay-r/sentiment-pcnn/blob/russir-2018/docs/paper.pdf)]
         [[code](https://github.com/nicolay-r/sentiment-pcnn/tree/russir-2018)]
     * **CLLS-2018** Conference (Were not published, includes presentation slides)
+        [[paper](https://doi.org/10.29007/26g7)]
         [[code](https://github.com/nicolay-r/sentiment-pcnn/tree/clls-2018)]
 * 2019 -- Implementation has been significantly refactored. Application of aggregation function of related contexts with different functions, especially with RNN application:
     * **CCIS** (vol. 1003) Journal
